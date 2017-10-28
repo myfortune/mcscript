@@ -12,7 +12,7 @@ const https = require('https');
 const md5  = require("md5");
 
 //configure
-const myLog = '/home/ec2-user/mcscript/current/log.txt';
+const myLog = '/home/ec2-user/mcscript/source/log.txt';
 
 //constants
 
