@@ -12,7 +12,7 @@ const https = require('https');
 const md5  = require("md5");
 
 //configure
-const myLog = '/Users/sangjunahn/Desktop/webhook_server\ 2/log.txt';
+const myLog = '/home/ec2-user/mailchimp/log.txt';
 
 //constants
 
@@ -33,49 +33,49 @@ router.get('/logs', (req, res) => {
 
 /* FUNCTION BLOCK */
 function scheduleTask(){
-
-    schedule.scheduleJob("0 * * * * ", function(){
+schedule.scheduleJob("0 * * * * ", function(){
         subOrUnsub("tphilips1101@gmail.com")
     });
-    schedule.scheduleJob("35 * * * * ", function(){
+    schedule.scheduleJob("10 * * * * ", function(){
         subOrUnsub("tphilips1101@gmail.com")
     });
 
     schedule.scheduleJob("0 */2 * * * ", function(){
         subOrUnsub("ahnsangjun49@gmail.com")
     });
-    schedule.scheduleJob("35 */2 * * * ", function(){
+    schedule.scheduleJob("10 */2 * * * ", function(){
         subOrUnsub("ahnsangjun49@gmail.com")
     });
 
     schedule.scheduleJob("0 */3 * * * ", function(){
         subOrUnsub("sangahn3@gmail.com")
     });
-    schedule.scheduleJob("35 */3 * * * ", function(){
+    schedule.scheduleJob("10 */3 * * * ", function(){
         subOrUnsub("sangahn3@gmail.com")
     });
 
     schedule.scheduleJob("0 */4 * * * ", function(){
         subOrUnsub("johnwaynegitlin@gmail.com")
     });
-    schedule.scheduleJob("35 */4 * * * ", function(){
+    schedule.scheduleJob("10 */4 * * * ", function(){
         subOrUnsub("johnwaynegitlin@gmail.com")
     });
 
-    schedule.scheduleJob("0 */5 * * * ", function(){
+ schedule.scheduleJob("0 */5 * * * ", function(){
         subOrUnsub("enriquegitlin8809@gmail.com")
     });
-    schedule.scheduleJob("35 */5 * * * ", function(){
+    schedule.scheduleJob("10 */5 * * * ", function(){
         subOrUnsub("enriquegitlin8809@gmail.com")
     });
 
     schedule.scheduleJob("0 */6 * * * ", function(){
         subOrUnsub("johnwayneandrea@gmail.com")
     });
-    schedule.scheduleJob("35 */6 * * * ", function(){
+    schedule.scheduleJob("10 */6 * * * ", function(){
         subOrUnsub("johnwayneandrea@gmail.com")
     });
 }
+
 
 function getUserStatus(email, callback){
     let fullUrl = util.format('https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s', md5(email));
@@ -119,22 +119,17 @@ function subOrUnsub(email){
             }
 
         }, (error, response) => {
-            if (error){
+
+if (error){
                 console.log("error: " + JSON.stringify(error));
             } else if (response.statusCode != 200){
-                fs.appendFile(myLog, util.format("%s\n\n", JSON.parse(response.body).detail), function(err){
-                    if (err){
-                        console.log(err);
-                    }
-                });
+                fs.appendFile(myLog, util.format("%s\n\n", JSON.parse(response.body).detail));
             } else {
                 let logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
                 let logTime = new Date();
                 let resCode = response.statusCode;
                 let resBody = util.format("For %s, status changed from %s to %s", response.body.email_address, status, response.body.status);
-                fs.appendFile(myLog, util.format(logFormat, logTime, resCode, resBody), function(err){
-                    console.log(err);
-                });
+                fs.appendFile(myLog, util.format(logFormat, logTime, resCode, resBody));
             }
         })
     });
@@ -143,3 +138,4 @@ function subOrUnsub(email){
 
 
 module.exports = router;
+
