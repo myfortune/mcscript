@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "pm2": "^2.7.2"
   },
   "scripts": {
     "start": "node app.js",
