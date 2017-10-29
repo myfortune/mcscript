@@ -17,6 +17,7 @@ const myLog = '/home/ec2-user/mcscript/source/log.txt';
 //constants
 const listURL = 'https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s';
 const api_key = "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17";
+const logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
 const email_list = [
     "tphilips1101@gmail.com", // every 1 hour
     "ahnsangjun49@gmail.com", // every 2 hour
@@ -102,19 +103,16 @@ function subOrUnsub(email){
             if (error){
                 console.log("error: " + JSON.stringify(error));
             } else if (response.statusCode != 200){
-                fs.appendFile(myLog, util.format("%s %s\n\n", email, response.body.detail));
+                let comment = util.format("For %s, %s", email, response.body.detail);
+                fs.appendFile(myLog, util.format(logFormat, new Date(), response.statusCode, comment));
             } else {
-                let logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
-                let logTime = new Date();
-                let resCode = response.statusCode;
-                let resBody = util.format("For %s, status changed from %s to %s", response.body.email_address, status, response.body.status);
-                fs.appendFile(myLog, util.format(logFormat, logTime, resCode, resBody));
+                let comment = util.format("For %s, status changed from %s to %s", response.body.email_address, status, response.body.status);
+                fs.appendFile(myLog, util.format(logFormat, new Date(),  response.statusCode, comment));
             }
         })
     });
 
 }
-
 
 module.exports = router;
 
