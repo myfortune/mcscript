@@ -14,8 +14,8 @@ const md5  = require("md5");
 //configure
 const myLog = '/home/ec2-user/mcscript/source/log.txt';
 
-//constants
 
+//schedule tasks.
 scheduleTask();
 
 //log page
@@ -120,10 +120,10 @@ function subOrUnsub(email){
 
         }, (error, response) => {
 
-if (error){
+        if (error){
                 console.log("error: " + JSON.stringify(error));
             } else if (response.statusCode != 200){
-                fs.appendFile(myLog, util.format("%s\n\n", JSON.parse(response.body).detail));
+                fs.appendFile(myLog, util.format("%s\n\n", response.body.detail));
             } else {
                 let logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
                 let logTime = new Date();
