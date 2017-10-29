@@ -14,6 +14,19 @@ const md5  = require("md5");
 //configure
 const myLog = '/home/ec2-user/mcscript/source/log.txt';
 
+//constants
+const listURL = 'https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s';
+const api_key = "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17";
+const email_list = [
+    "tphilips1101@gmail.com", // every 1 hour
+    "ahnsangjun49@gmail.com", // every 2 hour
+    "sangahn3@gmail.com", // every 3 hour
+    "johnwaynegitlin@gmail.com", // every 4 hour
+    "enriquegitlin8809@gmail.com", // every 5 hour
+    "johnwayneandrea@gmail.com" // every 6 hour
+];
+
+
 
 //schedule tasks.
 scheduleTask();
@@ -33,58 +46,27 @@ router.get('/logs', (req, res) => {
 
 /* FUNCTION BLOCK */
 function scheduleTask(){
-schedule.scheduleJob("0 * * * * ", function(){
-        subOrUnsub("tphilips1101@gmail.com")
-    });
-    schedule.scheduleJob("10 * * * * ", function(){
-        subOrUnsub("tphilips1101@gmail.com")
-    });
-
-    schedule.scheduleJob("0 */2 * * * ", function(){
-        subOrUnsub("ahnsangjun49@gmail.com")
-    });
-    schedule.scheduleJob("10 */2 * * * ", function(){
-        subOrUnsub("ahnsangjun49@gmail.com")
-    });
-
-    schedule.scheduleJob("0 */3 * * * ", function(){
-        subOrUnsub("sangahn3@gmail.com")
-    });
-    schedule.scheduleJob("10 */3 * * * ", function(){
-        subOrUnsub("sangahn3@gmail.com")
-    });
-
-    schedule.scheduleJob("0 */4 * * * ", function(){
-        subOrUnsub("johnwaynegitlin@gmail.com")
-    });
-    schedule.scheduleJob("10 */4 * * * ", function(){
-        subOrUnsub("johnwaynegitlin@gmail.com")
-    });
-
- schedule.scheduleJob("0 */5 * * * ", function(){
-        subOrUnsub("enriquegitlin8809@gmail.com")
-    });
-    schedule.scheduleJob("10 */5 * * * ", function(){
-        subOrUnsub("enriquegitlin8809@gmail.com")
-    });
-
-    schedule.scheduleJob("0 */6 * * * ", function(){
-        subOrUnsub("johnwayneandrea@gmail.com")
-    });
-    schedule.scheduleJob("10 */6 * * * ", function(){
-        subOrUnsub("johnwayneandrea@gmail.com")
+    email_list.map((email, index) => {
+        schedule.scheduleJob(
+            util.format("0 %s * * *", util.format("*/%d", index + 1)), function(){
+                subOrUnsub(email);
+            });
+        schedule.scheduleJob(
+            util.format("10 %s * * *", util.format("*/%d", index + 1)), function(){
+                subOrUnsub(email);
+            });
     });
 }
 
 
 function getUserStatus(email, callback){
-    let fullUrl = util.format('https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s', md5(email));
+    let fullUrl = util.format(listURL, md5(email));
 
     request({
         url: fullUrl,
         method:"GET",
         headers: {
-            'Authorization': "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17"
+            'Authorization': api_key
         }
     }, (err, res) => {
         if (err){
@@ -98,32 +80,29 @@ function getUserStatus(email, callback){
 
 function subOrUnsub(email){
 
-    let fullUrl = util.format('https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s', md5(email));
+    //add MD5 hash email address to url
+    let fullUrl = util.format(listURL, md5(email));
 
+    //status before sub/unsub
     let prevStatus = null;
     getUserStatus(email, function(status){
         prevStatus = status;
         request({
-            //set URL
             url: fullUrl,
             method: "PUT",
             json: true,
-            //set headers
             headers: {
-                'Authorization': "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17",
+                'Authorization': api_key,
                 'Content-Type': "application/json"
             },
-            //post body
             body: {
                 "status": status === "subscribed" ? "unsubscribed" : "subscribed"
             }
-
         }, (error, response) => {
-
-        if (error){
+            if (error){
                 console.log("error: " + JSON.stringify(error));
             } else if (response.statusCode != 200){
-                fs.appendFile(myLog, util.format("%s\n\n", response.body.detail));
+                fs.appendFile(myLog, util.format("%s %s\n\n", email, response.body.detail));
             } else {
                 let logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
                 let logTime = new Date();
