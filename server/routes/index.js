@@ -31,7 +31,6 @@ const email_list = [
 
 //schedule tasks.
 scheduleTask();
-var abc = new Promise();
 //log page
 router.get('/logs', (req, res) => {
     let contentData = null;
