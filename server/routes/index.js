@@ -45,7 +45,7 @@ router.get('/logs', (req, res) => {
 });
 
 router.get('/webhook', (req, res) => {
-    fs.appendFile(myWebhook, util.format("RES: %s\n", JSON.stringify(res)));
+    fs.appendFile(myWebhook, util.format("RES: %s\n", res));
     fs.appendFile(myWebhook, util.format("RESBODY: %s\n", JSON.stringify(res.body)));
     console.log(JSON.stringify(res.body));
     var data = {message: "good"};
