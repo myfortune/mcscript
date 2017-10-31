@@ -31,7 +31,7 @@ const email_list = [
 
 //schedule tasks.
 scheduleTask();
-
+var abc = new Promise();
 //log page
 router.get('/logs', (req, res) => {
     let contentData = null;
@@ -43,6 +43,11 @@ router.get('/logs', (req, res) => {
             contentData = data;
         }
     });
+});
+
+router.get('/webhook', (req, res) => {
+   res.render('webhook',  {response: JSON.stringify(req.body)});
+
 });
 
 /* FUNCTION BLOCK */
