@@ -10,6 +10,7 @@ const download = require("download");
 const schedule = require('node-schedule');
 const https = require('https');
 const md5  = require("md5");
+const bodyParser = require("body-parser");
 
 //configure
 const myLog = '/home/ec2-user/mcscript/source/log.txt';
@@ -44,10 +45,13 @@ router.get('/logs', (req, res) => {
     });
 });
 
-router.get('/webhook', (req, res) => {
-    fs.appendFile(myWebhook, util.format("RES: %s\n", res));
-    fs.appendFile(myWebhook, util.format("RESBODY: %s\n", JSON.stringify(res.body)));
-    console.log(JSON.stringify(res.body));
+router.post('/webhook', (req, res) => {
+    console.log(req);
+    console.log(JSON.stringify(req.body));
+
+    fs.appendFile(myWebhook, util.format("RES: %s\n", req));
+    fs.appendFile(myWebhook, util.format("RESBODY: %s\n", JSON.stringify(req.body)));
+
     var data = {message: "good"};
     res.status(200).send(JSON.stringify(data));
    //res.render('webhook',  {response: JSON.stringify(req.body)});
