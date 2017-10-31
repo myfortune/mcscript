@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'html'));
 
 //middleware 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 var routes = require('./server/routes/index');
