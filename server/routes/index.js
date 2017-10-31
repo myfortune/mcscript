@@ -13,7 +13,7 @@ const md5  = require("md5");
 
 //configure
 const myLog = '/home/ec2-user/mcscript/source/log.txt';
-
+const myWebhook = '/home/ec2-user/mcscript/source/webhook.txt';
 //constants
 const listURL = 'https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s';
 const api_key = "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17";
@@ -45,7 +45,9 @@ router.get('/logs', (req, res) => {
 });
 
 router.get('/webhook', (req, res) => {
-   res.render('webhook',  {response: JSON.stringify(req.body)});
+    fs.appendFile(myWebhook, JSON.stringify(res.body));
+    console.log(JSON.stringify(res.body));
+   //res.render('webhook',  {response: JSON.stringify(req.body)});
 
 });
 
