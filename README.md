@@ -1,4 +1,4 @@
-#MC script
+# MC script
 
 Simple node.js server deployed on AWS. 
 
