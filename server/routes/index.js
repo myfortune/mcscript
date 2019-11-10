@@ -19,15 +19,7 @@ const myWebhook = '/home/ec2-user/mcscript/source/webhook.txt';
 const listURL = 'https://us17.api.mailchimp.com/3.0/lists/9b97dd4dbd/members/%s';
 const api_key = "api_key ce38a2b163c66ab21aa3a0d809c3db4b-us17";
 const logFormat = "Current Time: %s Response Code: %d, Message: %s\n\n";
-const email_list = [
-    "tphilips1101@gmail.com", // every 1 hour
-    "ahnsangjun49@gmail.com", // every 2 hour
-    "sangahn3@gmail.com", // every 3 hour
-    "johnwaynegitlin@gmail.com", // every 4 hour
-    "enriquegitlin8809@gmail.com", // every 5 hour
-    "johnwayneandrea@gmail.com" // every 6 hour
-];
-
+const email_list = []; // emails to be used for testing.
 
 
 //schedule tasks.
